@@ -72,14 +72,15 @@ describe("Voting", () => {
   });
 
   it("vote candidates", async () => {
-    await votingProgram.methods.vote(
-      "Pink",
-      new anchor.BN(1),
-    ).rpc();
-    await votingProgram.methods.vote(
-      "Blue",
-      new anchor.BN(1),
-    ).rpc();
+    try {
+      await votingProgram.methods.vote("Pink", new anchor.BN(1)).rpc();
+      await votingProgram.methods.vote("Blue", new anchor.BN(1)).rpc();
+      await expect(
+        votingProgram.methods.vote("Pink", new anchor.BN(1)).rpc()
+      ).rejects.toThrow("already voted");
+    } catch (e) {
+      console.log(e);
+    }
     await votingProgram.methods.vote(
       "Pink",
       new anchor.BN(1),
